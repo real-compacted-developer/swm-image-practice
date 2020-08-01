@@ -1,44 +1,29 @@
-const createError = require("http-errors");
 const express = require("express");
-const path = require("path");
-const cookieParser = require("cookie-parser");
-const logger = require("morgan");
-
-const indexRouter = require("./routes/index");
-const testsRouter = require("./routes/tests");
-const popplerRouter = require("./routes/poppler");
-const zipRouter = require("./routes/zip");
-
+//const fileUpload = require("express-fileupload");
+const cors = require("cors")
 const app = express();
-
-// view engine setup
-app.set("views", path.join(__dirname, "views"));
-app.set("view engine", "jade");
-
-app.use(logger("dev"));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "public")));
-
-app.use("/", indexRouter);
-app.use("/tests", testsRouter);
-app.use("/popplers", popplerRouter);
-app.use("/zips", zipRouter);
-// catch 404 and forward to error handler
-app.use(function (req, res, next) {
-  next(createError(404));
-});
-
-// error handler
-app.use(function (err, req, res) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get("env") === "development" ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render("error");
-});
-
-module.exports = app;
+// middle ware
+app.use(express.static("public")); //to access the files in public folder
+app.use(cors()); // it enables all cors requests
+// file upload api
+const indexRouter = require("./routes");
+app.use(indexRouter);
+// app.post("/upload", (req, res) => {
+//   if (!req.files) {
+//     return res.status(500).send({ msg: "file is not found" })
+//   }
+//   // accessing the file
+//   const myFile = req.files.file;
+//   //  mv() method places the file inside public directory
+//   myFile.mv(`${__dirname}/public/${myFile.name}`, function (err) {
+//     if (err) {
+//       console.log(err)
+//       return res.status(500).send({ msg: "Error occured" });
+//     }
+//     // returing the response with file path and name
+//     return res.send({ name: myFile.name, path: `/${myFile.name}` });
+//   });
+// })
+app.listen(3002, () => {
+  console.log("server is running at port 3002");
+})
