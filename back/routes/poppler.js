@@ -11,11 +11,12 @@ let opts = {
   combinedImage: true
 }
 
-router.get("/", () => {
+router.get("/", (req, res) => {
   pdf.convert(file, opts)
     .then(rq => {
       console.log(rq);
       console.log("Successfully converted");
+      res.status(200).send("성공");
     })
     .catch(error => {
       console.error(error);
