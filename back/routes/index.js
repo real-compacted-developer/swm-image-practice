@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const pdf = require("pdf-poppler");
 const fs = require("fs");
+const test = require("../utils/test");
 // const Zip = require("machinepack-zip");
 // const axios = require("axios");
 //  /* 아마존 S3에 올리기 */
@@ -44,14 +45,19 @@ router.post("/upload", upload.any(), async (req, res) => {
   }
   await pdf.convert(file, opts)
     .then(async () => {
-      console.log("Successfully converted");
+      console.log(`${filePath} Successfully converted`);
+    })
+    .then(async () => {
+      const result = await test(filePath);
+      console.log("result : ", result);
+      res.json({
+        success: true,
+        data: result
+      });
     })
     .catch(error => {
       console.error(error);
     })
-  res.json({
-    file: req.files,
-    body: req.body
-  });
+
 });
 module.exports = router;

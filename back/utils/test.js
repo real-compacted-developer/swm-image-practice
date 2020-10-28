@@ -1,9 +1,8 @@
 const upload = require("./uploadTest");
 
-console.log("upload Page");
-async function test() {
-  const result = await upload("자료구조")
-  console.log("과연 : ", result);
+async function test(filePath) {
+  const result = await upload(filePath);
+  return result;
 }
 
-test();
+module.exports = test;

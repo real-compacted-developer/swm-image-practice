@@ -10,10 +10,9 @@ const re = /\.png$/;
 // }
 
 const upload = async (name) => {
-  console.log("upload In");
   // ensure that this file is in the directory of the files you want to run the cronjob on
   const result = [];
-  const test = fs.readdirSync(`./back/${name}`);
+  const test = fs.readdirSync(__dirname + `/../${name}/`);
   const matches = test.filter((text) => { return re.test(text) });
   // console.log("These are the files you have", matches)
   const numFiles = matches.length;
@@ -26,7 +25,7 @@ const upload = async (name) => {
       // Buffer Pattern; how to handle buffers; straw, intake/outtake analogy
       const base64data = new Buffer.from(str, "binary");
       const url = await awsUpload(file, base64data);
-      console.log("url : ", url);
+      // console.log("url : ", url);
       result.push(url);
       // fs.readFile(filePath, (err, data) => {
       //   if (err) {
@@ -35,7 +34,7 @@ const upload = async (name) => {
       // })
     }
   }
-  console.log("result : ", result);
+  // console.log("result : ", result);
   return result;
 };
 
